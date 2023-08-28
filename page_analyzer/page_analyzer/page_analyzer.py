@@ -89,7 +89,7 @@ def post_url():
             if result:
                 messages = flash('Страница уже существует', 'info')
                 return redirect(url_for('show_url', messages=messages, id=result[0]))  # noqa: E501
-            cursor.execute('''INSERT INTO urls (name, created_at, schema)
+            cursor.execute('''INSERT INTO urls (name, created_at, scheme)
                            VALUES (%s, %s, %s);''', (url_parsed.hostname, datetime.datetime.now(), url_parsed.scheme))  # noqa: E501
             conn.commit()
             cursor.execute('''SELECT id

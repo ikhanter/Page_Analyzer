@@ -5,7 +5,7 @@
 -- Dumped from database version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 
--- Started on 2023-08-28 12:03:07 MSK
+-- Started on 2023-08-28 12:20:58 MSK
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,7 +23,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 212 (class 1259 OID 41067)
+-- TOC entry 212 (class 1259 OID 41086)
 -- Name: checks; Type: TABLE; Schema: public; Owner: ikhanter
 --
 
@@ -41,7 +41,7 @@ CREATE TABLE public.checks (
 ALTER TABLE public.checks OWNER TO ikhanter;
 
 --
--- TOC entry 211 (class 1259 OID 41066)
+-- TOC entry 211 (class 1259 OID 41085)
 -- Name: checks_id_seq; Type: SEQUENCE; Schema: public; Owner: ikhanter
 --
 
@@ -56,7 +56,7 @@ ALTER TABLE public.checks ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 210 (class 1259 OID 24691)
+-- TOC entry 210 (class 1259 OID 41080)
 -- Name: urls; Type: TABLE; Schema: public; Owner: ikhanter
 --
 
@@ -64,14 +64,14 @@ CREATE TABLE public.urls (
     id bigint NOT NULL,
     name character varying(255),
     created_at timestamp without time zone,
-    schema character varying(20)
+    scheme character varying(20)
 );
 
 
 ALTER TABLE public.urls OWNER TO ikhanter;
 
 --
--- TOC entry 209 (class 1259 OID 24690)
+-- TOC entry 209 (class 1259 OID 41079)
 -- Name: urls_id_seq; Type: SEQUENCE; Schema: public; Owner: ikhanter
 --
 
@@ -86,7 +86,7 @@ ALTER TABLE public.urls ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 3321 (class 0 OID 41067)
+-- TOC entry 3321 (class 0 OID 41086)
 -- Dependencies: 212
 -- Data for Name: checks; Type: TABLE DATA; Schema: public; Owner: ikhanter
 --
@@ -96,12 +96,12 @@ COPY public.checks (id, url_id, code, h1, title, description, created_at) FROM s
 
 
 --
--- TOC entry 3319 (class 0 OID 24691)
+-- TOC entry 3319 (class 0 OID 41080)
 -- Dependencies: 210
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: ikhanter
 --
 
-COPY public.urls (id, name, created_at, schema) FROM stdin;
+COPY public.urls (id, name, created_at, scheme) FROM stdin;
 \.
 
 
@@ -124,7 +124,7 @@ SELECT pg_catalog.setval('public.urls_id_seq', 1, false);
 
 
 --
--- TOC entry 3177 (class 2606 OID 41073)
+-- TOC entry 3177 (class 2606 OID 41092)
 -- Name: checks checks_pkey; Type: CONSTRAINT; Schema: public; Owner: ikhanter
 --
 
@@ -133,7 +133,7 @@ ALTER TABLE ONLY public.checks
 
 
 --
--- TOC entry 3175 (class 2606 OID 24695)
+-- TOC entry 3175 (class 2606 OID 41084)
 -- Name: urls urls_pkey; Type: CONSTRAINT; Schema: public; Owner: ikhanter
 --
 
@@ -142,7 +142,7 @@ ALTER TABLE ONLY public.urls
 
 
 --
--- TOC entry 3178 (class 2606 OID 41074)
+-- TOC entry 3178 (class 2606 OID 41093)
 -- Name: checks checks_url_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: ikhanter
 --
 
@@ -150,7 +150,7 @@ ALTER TABLE ONLY public.checks
     ADD CONSTRAINT checks_url_id_fkey FOREIGN KEY (url_id) REFERENCES public.urls(id);
 
 
--- Completed on 2023-08-28 12:03:11 MSK
+-- Completed on 2023-08-28 12:21:01 MSK
 
 --
 -- PostgreSQL database dump complete

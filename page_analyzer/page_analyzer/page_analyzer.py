@@ -68,7 +68,7 @@ def show_url(id):
                            WHERE url_id=%s
                            ORDER BY created_at DESC;''', (id,))  # noqa: E501
             checks = cursor.fetchall()
-        dict_keys = ('id', 'status_code', 'h1', 'title', 'description', 'created_at')
+        dict_keys = ('id', 'status_code', 'h1', 'title', 'description', 'created_at')  # noqa: E501
         all_checks = []
         for check in checks:
             all_checks.append(dict(zip(dict_keys, check)))
@@ -105,42 +105,45 @@ def post_url():
 
 @app.post('/urls/<int:id>/checks')
 def post_check(id):
-    with conn.cursor() as cursor:
-        cursor.execute('''SELECT * FROM urls WHERE id=%(id)s LIMIT 1;''', {'id': id})  # noqa: E501
-        result = cursor.fetchone()
-        url = f'{result[3]}://{result[1]}'
-        r = requests.get(url)
-        html = BeautifulSoup(r.text)
-        status_code = r.status_code
-        title = html.title
-        title = title.text if title else ''
-        h1 = html.h1
-        h1 = h1.text if h1 else ''
-        description = html.find('meta', property="og:description")
-        description = description['content'] if description else ''
-        created_at = datetime.datetime.now()
-        cursor.execute('''INSERT INTO url_checks
-                       (url_id,
-                       status_code,
-                       h1,
-                       title,
-                       description,
-                       created_at)
-                       VALUES
-                       (%(url_id)s,
-                       %(status_code)s,
-                       %(h1)s,
-                       %(title)s,
-                       %(description)s,
-                       %(created_at)s);''',
-                       {
-                           'url_id': id,
-                           'status_code': status_code,
-                           'h1': h1,
-                           'title': title,
-                           'description': description,
-                           'created_at': created_at,
-                       })  # noqa: E501
-        conn.commit()
-    messages = flash('Страница успешно проверена', 'success')
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute('''SELECT * FROM urls WHERE id=%(id)s LIMIT 1;''', {'id': id})  # noqa: E501
+            result = cursor.fetchone()
+            url = f'{result[3]}://{result[1]}'
+            r = requests.get(url)
+            html = BeautifulSoup(r.text)
+            status_code = r.status_code
+            title = html.title
+            title = title.text if title else ''
+            h1 = html.h1
+            h1 = h1.text if h1 else ''
+            description = html.find('meta', property="og:description")
+            description = description['content'] if description else ''
+            created_at = datetime.datetime.now()
+            cursor.execute('''INSERT INTO url_checks
+                        (url_id,
+                        status_code,
+                        h1,
+                        title,
+                        description,
+                        created_at)
+                        VALUES
+                        (%(url_id)s,
+                        %(status_code)s,
+                        %(h1)s,
+                        %(title)s,
+                        %(description)s,
+                        %(created_at)s);''',
+                        {
+                            'url_id': id,
+                            'status_code': status_code,
+                            'h1': h1,
+                            'title': title,
+                            'description': description,
+                            'created_at': created_at,
+                        })  # noqa: E501
+            conn.commit()
+            messages = flash('Страница успешно проверена', 'success')
+    except Exception: 
+        messages = flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('show_url', id=id, messages=messages))

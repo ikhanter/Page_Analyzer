@@ -43,8 +43,8 @@ def urls():
         temp = cursor.fetchall()
         result = []
         for el in temp:
-            cursor.execute('''SELECT DATE(created_at), code
-                           FROM checks
+            cursor.execute('''SELECT DATE(created_at), status_code
+                           FROM url_checks
                            WHERE url_id=%(temp_id)s
                            ORDER BY created_at DESC LIMIT 1;''', {'temp_id': el[0]})   # noqa: E501
             temp_check = cursor.fetchone()
@@ -63,12 +63,12 @@ def show_url(id):
         url_temp = cursor.fetchone()
         if url_temp:
             url = {'name': url_temp[0], 'created_at': url_temp[1]}
-            cursor.execute('''SELECT id, code, h1, title, description, DATE(created_at)
-                           FROM checks
+            cursor.execute('''SELECT id, status_code, h1, title, description, DATE(created_at)
+                           FROM url_checks
                            WHERE url_id=%s
                            ORDER BY created_at DESC;''', (id,))  # noqa: E501
             checks = cursor.fetchall()
-        dict_keys = ('id', 'code', 'h1', 'title', 'description', 'created_at')
+        dict_keys = ('id', 'status_code', 'h1', 'title', 'description', 'created_at')
         all_checks = []
         for check in checks:
             all_checks.append(dict(zip(dict_keys, check)))
@@ -111,7 +111,7 @@ def post_check(id):
         url = f'{result[3]}://{result[1]}'
         r = requests.get(url)
         html = BeautifulSoup(r.text)
-        code = r.status_code
+        status_code = r.status_code
         title = html.title
         title = title.text if title else ''
         h1 = html.h1
@@ -119,23 +119,23 @@ def post_check(id):
         description = html.find('meta', property="og:description")
         description = description['content'] if description else ''
         created_at = datetime.datetime.now()
-        cursor.execute('''INSERT INTO checks
+        cursor.execute('''INSERT INTO url_checks
                        (url_id,
-                       code,
+                       status_code,
                        h1,
                        title,
                        description,
                        created_at)
                        VALUES
                        (%(url_id)s,
-                       %(code)s,
+                       %(status_code)s,
                        %(h1)s,
                        %(title)s,
                        %(description)s,
                        %(created_at)s);''',
                        {
                            'url_id': id,
-                           'code': code,
+                           'status_code': status_code,
                            'h1': h1,
                            'title': title,
                            'description': description,

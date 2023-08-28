@@ -10,3 +10,6 @@ start:
 
 lint:
 	poetry run ruff check .
+
+build:
+	./build.sh

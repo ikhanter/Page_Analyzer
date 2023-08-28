@@ -12,6 +12,10 @@ flask = "^2.3.3"
 ruff = "^0.0.285"
 gunicorn = "^21.2.0"
 python-dotenv = "^1.0.0"
+validators = "^0.21.2"
+psycopg2 = "^2.9.7"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
 
 
 [build-system]

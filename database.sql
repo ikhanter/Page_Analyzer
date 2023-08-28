@@ -5,7 +5,7 @@
 -- Dumped from database version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.9 (Ubuntu 14.9-0ubuntu0.22.04.1)
 
--- Started on 2023-08-28 10:21:57 MSK
+-- Started on 2023-08-28 12:03:07 MSK
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -63,7 +63,8 @@ ALTER TABLE public.checks ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE public.urls (
     id bigint NOT NULL,
     name character varying(255),
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    schema character varying(20)
 );
 
 
@@ -100,7 +101,7 @@ COPY public.checks (id, url_id, code, h1, title, description, created_at) FROM s
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: ikhanter
 --
 
-COPY public.urls (id, name, created_at) FROM stdin;
+COPY public.urls (id, name, created_at, schema) FROM stdin;
 \.
 
 
@@ -149,7 +150,7 @@ ALTER TABLE ONLY public.checks
     ADD CONSTRAINT checks_url_id_fkey FOREIGN KEY (url_id) REFERENCES public.urls(id);
 
 
--- Completed on 2023-08-28 10:21:59 MSK
+-- Completed on 2023-08-28 12:03:11 MSK
 
 --
 -- PostgreSQL database dump complete

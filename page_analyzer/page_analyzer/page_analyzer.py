@@ -11,18 +11,28 @@ from flask import (
     url_for,
 )
 import os
-import psycopg2
+from psycopg2 import pool
+import re
 import requests
 from urllib.parse import urlparse
 import validators
 
 
 load_dotenv()
+MINCONN = 0
+MAXCONN = 10
 DB_FILE = 'database.sql'
 DB_NAMES = ('pa_dev', 'pa_deploy')
 DATABASE_URL = os.getenv('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL)
-
+namedb = 'pa_deploy'
+login_n_password = re.search(r"(?<=:\/\/).*(?=@)", DATABASE_URL).string
+login = re.search(r'.*(?=\:)', login_n_password).string
+password = re.search(r'(?<=\:).*', login_n_password).string
+host_n_port = re.search(r'(?<=\@).*(?=\/)', DATABASE_URL).string
+host = re.search(r'.*(?=\:)', host_n_port).string
+port = re.search(r'(?<=\:).*', host_n_port).string
+connection_pool = pool.SimpleConnectionPool(MINCONN, MAXCONN, dsn=DATABASE_URL)
+conn = connection_pool.getconn()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 

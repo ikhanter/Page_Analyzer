@@ -1,4 +1,6 @@
 install:
+	sudo apt get update
+	sudo apt-get install postgresql postgresql-dev python-dev
 	poetry install
 
 dev:

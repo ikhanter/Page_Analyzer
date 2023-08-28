@@ -1,6 +1,6 @@
 install:
-	sudo apt-get update
-	sudo apt-get install postgresql postgresql-server-dev-14 python-dev-is-python3
+	apt-get update
+	apt-get install postgresql postgresql-server-dev-14 python-dev-is-python3
 	poetry install
 
 dev:

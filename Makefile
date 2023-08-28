@@ -1,4 +1,6 @@
 install:
+	sudo apt install postgresql postgresql-contrib
+	
 	poetry install
 
 dev:

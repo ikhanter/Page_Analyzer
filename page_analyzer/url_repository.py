@@ -21,7 +21,7 @@ class UrlRepository:
         if result:
             total = dict(zip(keys, result[0]))
             return total
-        return tuple()
+        return dict(zip(keys, ('', '')))
     
     def get_url_by_id(self, id):
         result = UrlRepository.connector.execute('''SELECT name, DATE(created_at), scheme 

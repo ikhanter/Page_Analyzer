@@ -45,7 +45,7 @@ class Logic:
         else:
             feedback['status'] = 'danger'
             feedback['message'] = 'Некорректный URL'
-            feedback['content'] = url
+            feedback['content'] = str(url)
         return feedback
 
 
@@ -70,7 +70,7 @@ class Logic:
                             description=description,
                             created_at=created_at)
             messages = ('Страница успешно проверена', 'success')
-        except Exception: 
+        except: 
             messages = ('Произошла ошибка при проверке', 'danger')
         finally:
             return messages

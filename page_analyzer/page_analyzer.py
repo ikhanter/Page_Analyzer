@@ -55,7 +55,7 @@ def post_url():
         case 'info':
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
-            return redirect(url_for('index', messages=messages, suggested_url=result['content']), code=422)  # noqa: E501
+            return redirect(url_for('index', messages=messages, suggested_url=result['content'])), 422  # noqa: E501
 
 
 @app.post('/urls/<int:id>/checks')

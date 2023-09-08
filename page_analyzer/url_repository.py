@@ -62,12 +62,15 @@ class UrlRepository:
     
 
     def add_url(self, hostname, date, scheme):
-        self.connector.execute('''INSERT INTO urls (name, created_at, scheme)
-                        VALUES (%s, %s, %s);''', (hostname, date, scheme), get_back=False, commit=True)  # noqa: E501
+        self.connector.execute('''BEGIN;
+                               INSERT INTO urls (name, created_at, scheme)
+                               VALUES (%s, %s, %s);
+                               COMMIT;''', (hostname, date, scheme), get_back=False)  # noqa: E501
  
 
-    def add_check(self, url_id=None, status_code=None, h1=None, title=None, description=None, created_at=None):  # noqa: E501
-        self.connector.execute('''INSERT INTO url_checks
+    def add_check(self, url_id='', status_code='', h1='', title='', description='', created_at=''):  # noqa: E501
+        self.connector.execute('''BEGIN;
+                    INSERT INTO url_checks
                     (url_id,
                     status_code,
                     h1,
@@ -80,7 +83,8 @@ class UrlRepository:
                     %(h1)s,
                     %(title)s,
                     %(description)s,
-                    %(created_at)s);''',
+                    %(created_at)s);
+                    COMMIT;''',
                     {
                         'url_id': url_id,
                         'status_code': status_code,
@@ -88,4 +92,4 @@ class UrlRepository:
                         'title': title,
                         'description': description,
                         'created_at': created_at,
-                    }, get_back=False, commit=True)
+                    }, get_back=False)

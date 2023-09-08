@@ -22,15 +22,13 @@ class DatabaseConnection:
         cursor = DatabaseConnection.conn.cursor()
         return cursor
 
-    def execute(self, *query_content, get_back=True, commit=False):
+    def execute(self, *query_content, get_back=True):
         self.getconn()
         cursor = self.cursor()
         cursor.execute(*query_content)
         result = None
         if get_back:
             result = cursor.fetchall()
-        if commit:
-            DatabaseConnection.conn.commit()
         cursor.close()
         self.putconn()
         return result

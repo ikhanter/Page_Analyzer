@@ -70,7 +70,7 @@ class Logic:
                             description=description,
                             created_at=created_at)
             messages = ('Страница успешно проверена', 'success')
-        except: 
+        except Exception: 
             messages = ('Произошла ошибка при проверке', 'danger')
         finally:
             return messages

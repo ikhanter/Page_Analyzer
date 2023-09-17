@@ -33,7 +33,7 @@ def index():
     return render_template('index.html', messages=messages, suggested_url=url), 200  # noqa: E501
 
 
-@app.route('/urls')
+@app.route('/urls/')
 def urls():
     result = functionality.form_urls_with_last_check()
     return render_template('urls.html', url_list=result), 200
@@ -49,7 +49,7 @@ def show_url(id):
     return render_template('404.html'), 404
 
 
-@app.post('/urls')
+@app.post('/')
 def post_url():
     url = request.form['url']
     result = functionality.process_url_in_db(url)
@@ -61,14 +61,14 @@ def post_url():
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
             abort(422)
-        #     return redirect(url_for('index', messages=messages, suggested_url=result['content'])), 422  # noqa: E501
+            # return redirect(url_for('index', messages=messages, suggested_url=result['content']), code=422)  # noqa: E501
 
 
 @app.errorhandler(422)
-def handle_unprocessable_entity(error):
+def invalid_url(error):
     url = request.form['url']
-    messages = flash('Error!', 'danger')
-    return redirect(url_for('index', messages=messages, suggested_url=url)) 
+    messages = get_flashed_messages(with_categories=True)
+    return render_template('index.html', messages=messages, suggested_url=url), 422
 
 
 @app.post('/urls/<int:id>/checks')

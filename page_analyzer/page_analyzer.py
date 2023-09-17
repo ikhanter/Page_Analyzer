@@ -68,7 +68,7 @@ def post_url():
 def invalid_url(error):
     url = request.form['url']
     messages = get_flashed_messages(with_categories=True)
-    return render_template('index.html', messages=messages, suggested_url=url), 422
+    return render_template('index.html', messages=messages, suggested_url=url), 422  # noqa: E501
 
 
 @app.post('/urls/<int:id>/checks')

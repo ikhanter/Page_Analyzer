@@ -16,6 +16,8 @@ validators = "^0.21.2"
 psycopg2-binary = "^2.9.7"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.2"
+pytest = "^7.4.2"
+werkzeug = "^2.3.7"
 
 
 [build-system]

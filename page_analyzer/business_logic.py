@@ -60,7 +60,7 @@ class Logic:
             title = title.text if title else ''
             h1 = html.h1
             h1 = h1.text if h1 else ''
-            description = html.find('meta', name="description")
+            description = html.find('meta', attrs={'name': "description"})
             description = description['content'] if description else ''
             created_at = datetime.datetime.now()
             self.url_repo_connector.add_check(url_id=id,

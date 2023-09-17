@@ -13,3 +13,6 @@ lint:
 
 build:
 	./build.sh
+
+test:
+	poetry run pytest

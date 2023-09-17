@@ -2,6 +2,7 @@ from page_analyzer.business_logic import Logic
 from page_analyzer.database import DatabaseConnection
 from page_analyzer.url_repository import UrlRepository
 from flask import (
+    abort,
     flash,
     Flask,
     get_flashed_messages,
@@ -13,10 +14,14 @@ from flask import (
 import os
 
 
+def create_app():
+    new_app = Flask(__name__)
+    return new_app
+
 DB_NAMES = ('pa_dev', 'pa_deploy')
 db_connector = DatabaseConnection()
 url_repo = UrlRepository(db_connector)
-app = Flask(__name__)
+app = create_app()
 app.secret_key = os.getenv('SECRET_KEY')
 functionality = Logic(url_repo)
 
@@ -55,7 +60,15 @@ def post_url():
         case 'info':
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
-            return redirect(url_for('index', messages=messages, suggested_url=result['content'])), 422  # noqa: E501
+            abort(422)
+        #     return redirect(url_for('index', messages=messages, suggested_url=result['content'])), 422  # noqa: E501
+
+
+@app.errorhandler(422)
+def handle_unprocessable_entity(error):
+    url = request.form['url']
+    messages = flash('Error!', 'danger')
+    return redirect(url_for('index', messages=messages, suggested_url=url)) 
 
 
 @app.post('/urls/<int:id>/checks')

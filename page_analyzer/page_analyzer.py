@@ -49,7 +49,7 @@ def show_url(id):
     return render_template('404.html'), 404
 
 
-@app.post('/')
+@app.post('/urls')
 def post_url():
     url = request.form['url']
     result = functionality.process_url_in_db(url)

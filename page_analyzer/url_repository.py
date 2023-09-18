@@ -4,7 +4,6 @@ class UrlRepository:
     def __init__(self, connector):
         self.connector = connector
 
-
     def get_all_urls(self):
         result = self.connector.execute('SELECT id, name, created_at FROM urls ORDER BY created_at DESC;')  # noqa: E501
         total = []
@@ -12,7 +11,6 @@ class UrlRepository:
         for el in result:
             total.append(dict(zip(keys, el)))
         return total
-
 
     def get_last_check_for_url_by_id(self, id):
         result = self.connector.execute('''SELECT DATE(created_at), status_code
@@ -25,7 +23,6 @@ class UrlRepository:
             return total
         return dict(zip(keys, ('', '')))
 
-
     def get_url_by_id(self, id):
         result = self.connector.execute('''SELECT name, DATE(created_at), scheme
                                                  FROM urls
@@ -36,7 +33,6 @@ class UrlRepository:
             keys = ('name', 'created_at', 'scheme')
             return dict(zip(keys, result))
         return False
-
 
     def get_checks_by_url_id(self, id):
         checks_temp = self.connector.execute('''SELECT id, status_code, h1, title, description, DATE(created_at)
@@ -49,7 +45,6 @@ class UrlRepository:
             checks.append(dict(zip(keys, check)))
         return checks
 
-
     def get_url_by_hostname(self, hostname):
         result = self.connector.execute('''SELECT id, name, created_at
                            FROM urls
@@ -60,13 +55,11 @@ class UrlRepository:
             return dict(zip(keys, result[0]))
         return False
 
-
     def add_url(self, hostname, date, scheme):
         self.connector.execute('''BEGIN;
                                INSERT INTO urls (name, created_at, scheme)
                                VALUES (%s, %s, %s);
                                COMMIT;''', (hostname, date, scheme), get_back=False)  # noqa: E501
-
 
     def add_check(self, url_id='', status_code='', h1='', title='', description='', created_at=''):  # noqa: E501
         self.connector.execute('''BEGIN;

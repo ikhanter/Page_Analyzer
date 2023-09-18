@@ -9,10 +9,8 @@ from urllib.parse import urlparse
 class Logic:
     url_repo_connector = None
 
-
     def __init__(self, url_repo: UrlRepository):
         self.url_repo_connector = url_repo
-
 
     def form_urls_with_last_check(self):
         url_list = self.url_repo_connector.get_all_urls()
@@ -21,7 +19,6 @@ class Logic:
             last_check = self.url_repo_connector.get_last_check_for_url_by_id(url['id'])  # noqa: E501
             result.append({**url, **last_check})
         return result
-
 
     def process_url_in_db(self, url):
         url_parsed = urlparse(url)
@@ -44,7 +41,6 @@ class Logic:
             feedback['content'] = str(url)
         return feedback
 
-
     def make_check(self, id):
         try:
             result = self.url_repo_connector.get_url_by_id(id)
@@ -61,11 +57,11 @@ class Logic:
             description = description['content'] if description else ''
             created_at = datetime.datetime.now()
             self.url_repo_connector.add_check(url_id=id,
-                            status_code=status_code,
-                            h1=h1,
-                            title=title,
-                            description=description,
-                            created_at=created_at)
+                                              status_code=status_code,
+                                              h1=h1,
+                                              title=title,
+                                              description=description,
+                                              created_at=created_at)
             messages = ('Страница успешно проверена', 'success')
         except Exception:
             messages = ('Произошла ошибка при проверке', 'danger')

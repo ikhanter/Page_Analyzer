@@ -10,7 +10,7 @@ class DatabaseConnection:
     def __init__(self):
         load_dotenv()
         DATABASE_URL = os.getenv('DATABASE_URL')
-        DatabaseConnection.conn_pool = pool.SimpleConnectionPool(DatabaseConnection.minconn, DatabaseConnection.maxconn, dsn=DATABASE_URL)  #noqa: E501
+        DatabaseConnection.conn_pool = pool.SimpleConnectionPool(DatabaseConnection.minconn, DatabaseConnection.maxconn, dsn=DATABASE_URL)  # noqa: E501
 
     def getconn(self):
         DatabaseConnection.conn = DatabaseConnection.conn_pool.getconn()

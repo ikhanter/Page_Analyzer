@@ -78,11 +78,10 @@ class UrlRepository:
                     %(description)s,
                     %(created_at)s);
                     COMMIT;''',
-                    {
-                        'url_id': url_id,
-                        'status_code': status_code,
-                        'h1': h1,
-                        'title': title,
-                        'description': description,
-                        'created_at': created_at,
+                    {'url_id': url_id,
+                     'status_code': status_code,
+                     'h1': h1,
+                     'title': title,
+                     'description': description,
+                     'created_at': created_at,
                     }, get_back=False)

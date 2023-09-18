@@ -23,10 +23,6 @@ class Logic:
         return result
 
 
-    def validate_url(self, url):
-        return validators.url(url)
-
-
     def process_url_in_db(self, url):
         url_parsed = urlparse(url)
         feedback = {'status': None, 'message': None, 'content': None}

@@ -51,7 +51,7 @@ class UrlRepository:
 
 
     def get_url_by_hostname(self, hostname):
-        result = self.connector.execute('''SELECT *
+        result = self.connector.execute('''SELECT id, name, created_at
                            FROM urls
                            WHERE name=%(hostname)s
                            LIMIT 1;''', {'hostname': str(hostname)})

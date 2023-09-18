@@ -18,6 +18,7 @@ def create_app():
     new_app = Flask(__name__)
     return new_app
 
+
 DB_NAMES = ('pa_dev', 'pa_deploy')
 db_connector = DatabaseConnection()
 url_repo = UrlRepository(db_connector)

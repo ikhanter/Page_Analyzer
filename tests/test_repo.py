@@ -190,6 +190,7 @@ def test_process_url_in_db(functionality):
         'content': 'httpssss://abc@abc.net'
     }
 
+
 @pook.on
 def test_make_check(functionality):
     pook.get('https://ru.hexlet.io', reply=200, response_type='text/html', response_body='<html><head><title>Test title</title><meta name="description" content="Test description for Page Analyzer"></head><body><h1>Test h1</h1></body></html>')  # noqa: E501

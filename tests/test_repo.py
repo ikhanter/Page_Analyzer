@@ -1,11 +1,8 @@
 import copy
 import datetime
-from unittest.mock import Mock
 from page_analyzer.business_logic import Logic
-from page_analyzer.page_analyzer import create_app
 import pook
 import pytest
-import requests
 
 
 class FakeRepo:
@@ -74,12 +71,12 @@ class FakeRepo:
         new_list = copy.deepcopy(self.all_urls)
         for el in new_list:
             del el['scheme']
-        return sorted(new_list, key=lambda x: datetime.datetime.strptime(x['created_at'], '%Y-%m-%d'), reverse=True)
-    
+        return sorted(new_list, key=lambda x: datetime.datetime.strptime(x['created_at'], '%Y-%m-%d'), reverse=True)  # noqa: E501
+
     def get_last_check_for_url_by_id(self, url_id):
         result = self.get_checks_by_url_id(url_id)
         if result:
-            result = result[0]  
+            result = result[0]
             return {
                 'last_check_created_at': result['created_at'],
                 'last_check_status_code': result['status_code'],
@@ -88,22 +85,22 @@ class FakeRepo:
             'last_check_created_at': '',
             'last_check_status_code': '',
         }
-    
+
     def get_url_by_id(self, url_id):
         for url in self.all_urls:
             if url['id'] == url_id:
                 new_dict = copy.deepcopy(url)
         del new_dict['id']
         return new_dict
-    
+
     def get_checks_by_url_id(self, url_id):
         for url in self.all_checks:
             if url['url_id'] == url_id:
                 new_list = copy.deepcopy(url['checks'])
                 if new_list != []:
-                    return sorted(new_list, key=lambda x: datetime.datetime.strptime(x['created_at'], '%Y-%m-%d'), reverse=True)
+                    return sorted(new_list, key=lambda x: datetime.datetime.strptime(x['created_at'], '%Y-%m-%d'), reverse=True)  # noqa: E501
                 return new_list
-    
+
     def get_url_by_hostname(self, hostname):
         for url in self.all_urls:
             if url['name'] == hostname:
@@ -121,17 +118,20 @@ class FakeRepo:
             'scheme': scheme
         })
 
-    def add_check(self, url_id='', status_code='', h1='', title='', description='', created_at=''):
+    def add_check(self, url_id='', status_code='', h1='', title='', description='', created_at=''):  # noqa: E501
         for url in self.all_checks:
             if url['url_id'] == url_id:
-                max_check_id = sorted(url['checks'], key=lambda x: x['id'])[0]['id']
+                if url['checks']:
+                    max_check_id = sorted(url['checks'], key=lambda x: x['id'])[0]['id']  # noqa: E501
+                else:
+                    max_check_id = 0
                 url['checks'].append({
                     'id': max_check_id + 1,
                     'status_code': status_code,
                     'h1': h1,
                     'title': title,
                     'description': description,
-                    'created_at': created_at
+                    'created_at': created_at.strftime('%Y-%m-%d')
                 })
 
 
@@ -192,10 +192,9 @@ def test_process_url_in_db(functionality):
 
 @pook.on
 def test_make_check(functionality):
-    pook.get('https://ru.hexlet.io').reply(status=200, body='<html><head><title>Test</title><meta name="description" content="Test check for Page Analyzer"></head><body><h1>Test</h1></body></html>', headers={'Content-Type': 'text/html'})
-    pook.get('http://www.google.com').reply(status=500, body='<html><head><title>Test for bad</title></head></html>', headers={'Content-Type': 'text/html'})
+    pook.get('https://ru.hexlet.io', reply=200, response_type='text/html', response_body='<html><head><title>Test title</title><meta name="description" content="Test description for Page Analyzer"></head><body><h1>Test h1</h1></body></html>')  # noqa: E501
+    pook.get('http://www.google.com', reply=500, response_type='text/html', response_body='<html><head><title>Test for bad</title></лдодлhead></html>')  # noqa: E501
     result_good = functionality.make_check(1)
     result_bad = functionality.make_check(2)
     assert result_good == ('Страница успешно проверена', 'success')
-    # assert result_bad == ('Произошла ошибка при проверке', 'danger')
-    
+    assert result_bad == ('Произошла ошибка при проверке', 'danger')

@@ -27,9 +27,9 @@ class UrlRepository:
 
 
     def get_url_by_id(self, id):
-        result = self.connector.execute('''SELECT name, DATE(created_at), scheme 
-                                                 FROM urls 
-                                                 WHERE id=%s 
+        result = self.connector.execute('''SELECT name, DATE(created_at), scheme
+                                                 FROM urls
+                                                 WHERE id=%s
                                                  LIMIT 1;''', (id,))  # noqa: E501
         if result:
             result = result[0]
@@ -59,14 +59,14 @@ class UrlRepository:
             keys = ('id', 'name', 'created_at')
             return dict(zip(keys, result[0]))
         return False
-    
+
 
     def add_url(self, hostname, date, scheme):
         self.connector.execute('''BEGIN;
                                INSERT INTO urls (name, created_at, scheme)
                                VALUES (%s, %s, %s);
                                COMMIT;''', (hostname, date, scheme), get_back=False)  # noqa: E501
- 
+
 
     def add_check(self, url_id='', status_code='', h1='', title='', description='', created_at=''):  # noqa: E501
         self.connector.execute('''BEGIN;

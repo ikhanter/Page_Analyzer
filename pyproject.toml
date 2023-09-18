@@ -29,7 +29,7 @@ build-backend = "poetry.core.masonry.api"
 # Enable the pycodestyle (`E`) and Pyflakes (`F`) rules by default.
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
-select = ["E", "F"]
+select = ["W", "E", "F"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

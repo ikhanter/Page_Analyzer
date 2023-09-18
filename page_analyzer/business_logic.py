@@ -50,7 +50,8 @@ class Logic:
             result = self.url_repo_connector.get_url_by_id(id)
             url = f"{result['scheme']}://{result['name']}"
             r = requests.get(url)
-            html = BeautifulSoup(r.text)
+            r.raise_for_status()
+            html = BeautifulSoup(r.text, features="html.parser")
             status_code = r.status_code
             title = html.title
             title = title.text if title else ''
@@ -66,7 +67,7 @@ class Logic:
                             description=description,
                             created_at=created_at)
             messages = ('Страница успешно проверена', 'success')
-        except Exception: 
+        except Exception:
             messages = ('Произошла ошибка при проверке', 'danger')
         finally:
             return messages

@@ -1,2 +1,6 @@
 __pycache__/
 .env
+.coverage
+coverage.xml
+.ruff_cache/
+.pytest_cache/

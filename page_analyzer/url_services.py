@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import datetime
 import validators
 from page_analyzer.url_repository import UrlRepository
-import psycopg2.errors
 import requests
 from urllib.parse import urlparse
 

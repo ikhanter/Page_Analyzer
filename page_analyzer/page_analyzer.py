@@ -46,6 +46,11 @@ def show_url(id):
     if url:
         checks = url_repo.get_checks_by_url_id(id)
         return render_template('show_url.html', messages=messages, id=id, url=url, checks=checks), 200  # noqa: E501
+    abort(404)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
     return render_template('404.html'), 404
 
 
@@ -60,14 +65,8 @@ def post_url():
         case 'info':
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
-            abort(422)
-
-
-@app.errorhandler(422)
-def invalid_url(error):
-    url = request.form['url']
-    messages = get_flashed_messages(with_categories=True)
-    return render_template('index.html', messages=messages, suggested_url=url), 422  # noqa: E501
+            new_messages = get_flashed_messages(with_categories=True)
+            return render_template('index.html', messages=new_messages, suggested_url=url), 422 
 
 
 @app.post('/urls/<int:id>/checks')

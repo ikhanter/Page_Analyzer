@@ -2,11 +2,12 @@ from bs4 import BeautifulSoup
 import datetime
 import validators
 from page_analyzer.url_repository import UrlRepository
+import psycopg2.errors
 import requests
 from urllib.parse import urlparse
 
 
-class Logic:
+class UrlServices:
     url_repo_connector = None
 
     def __init__(self, url_repo: UrlRepository):
@@ -42,11 +43,16 @@ class Logic:
         return feedback
 
     def make_check(self, id):
+        result = self.url_repo_connector.get_url_by_id(id)
+        url = f"{result['scheme']}://{result['name']}"
+        error = False
         try:
-            result = self.url_repo_connector.get_url_by_id(id)
-            url = f"{result['scheme']}://{result['name']}"
             r = requests.get(url)
             r.raise_for_status()
+        except requests.exceptions.RequestException:
+            error = True
+            messages = ('Произошла ошибка при проверке', 'danger')
+        if not error:
             html = BeautifulSoup(r.text, features="html.parser")
             status_code = r.status_code
             title = html.title
@@ -57,13 +63,10 @@ class Logic:
             description = description['content'] if description else ''
             created_at = datetime.datetime.now()
             self.url_repo_connector.add_check(url_id=id,
-                                              status_code=status_code,
-                                              h1=h1,
-                                              title=title,
-                                              description=description,
-                                              created_at=created_at)
+                                                status_code=status_code,
+                                                h1=h1,
+                                                title=title,
+                                                description=description,
+                                                created_at=created_at)
             messages = ('Страница успешно проверена', 'success')
-        except Exception:
-            messages = ('Произошла ошибка при проверке', 'danger')
-        finally:
-            return messages
+        return messages

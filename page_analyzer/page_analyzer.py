@@ -1,4 +1,4 @@
-from page_analyzer.business_logic import Logic
+from page_analyzer.url_services import UrlServices
 from page_analyzer.database import DatabaseConnection
 from page_analyzer.url_repository import UrlRepository
 from flask import (
@@ -19,12 +19,11 @@ def create_app():
     return new_app
 
 
-DB_NAMES = ('pa_dev', 'pa_deploy')
 db_connector = DatabaseConnection()
 url_repo = UrlRepository(db_connector)
 app = create_app()
 app.secret_key = os.getenv('SECRET_KEY')
-functionality = Logic(url_repo)
+functionality = UrlServices(url_repo)
 
 
 @app.route('/')
@@ -62,7 +61,6 @@ def post_url():
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
             abort(422)
-            # return redirect(url_for('index', messages=messages, suggested_url=result['content']), code=422)  # noqa: E501
 
 
 @app.errorhandler(422)

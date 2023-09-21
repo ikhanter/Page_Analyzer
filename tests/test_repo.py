@@ -1,6 +1,6 @@
 import copy
 import datetime
-from page_analyzer.business_logic import Logic
+from page_analyzer.url_services import UrlServices
 import pook
 import pytest
 
@@ -138,7 +138,7 @@ class FakeRepo:
 @pytest.fixture()
 def functionality():
     fake_repo = FakeRepo()
-    functionality = Logic(fake_repo)
+    functionality = UrlServices(fake_repo)
     return functionality
 
 

@@ -66,7 +66,7 @@ def post_url():
             return redirect(url_for('show_url', messages=messages, id=result['content']))  # noqa: E501
         case 'danger':
             new_messages = get_flashed_messages(with_categories=True)
-            return render_template('index.html', messages=new_messages, suggested_url=url), 422 
+            return render_template('index.html', messages=new_messages, suggested_url=url), 422  # noqa: E501
 
 
 @app.post('/urls/<int:id>/checks')

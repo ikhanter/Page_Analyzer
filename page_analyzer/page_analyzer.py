@@ -1,4 +1,4 @@
-from page_analyzer.url_services import UrlServices
+from page_analyzer.url_service import UrlService
 from page_analyzer.database import DatabaseConnection
 from page_analyzer.url_repository import UrlRepository
 from flask import (
@@ -23,7 +23,7 @@ db_connector = DatabaseConnection()
 url_repo = UrlRepository(db_connector)
 app = create_app()
 app.secret_key = os.getenv('SECRET_KEY')
-functionality = UrlServices(url_repo)
+url_service = UrlService(url_repo)
 
 
 @app.route('/')
@@ -35,7 +35,7 @@ def index():
 
 @app.route('/urls/')
 def urls():
-    result = functionality.form_urls_with_last_check()
+    result = url_service.form_urls_with_last_check()
     return render_template('urls.html', url_list=result), 200
 
 
@@ -57,7 +57,7 @@ def page_not_found(error):
 @app.post('/urls')
 def post_url():
     url = request.form['url']
-    result = functionality.process_url_in_db(url)
+    result = url_service.process_url_in_db(url)
     messages = flash(result['message'], result['status'])
     match result['status']:
         case 'success':
@@ -71,6 +71,6 @@ def post_url():
 
 @app.post('/urls/<int:id>/checks')
 def post_check(id):
-    feedback = functionality.make_check(id)
+    feedback = url_service.make_check(id)
     messages = flash(*feedback)
     return redirect(url_for('show_url', id=id, messages=messages))

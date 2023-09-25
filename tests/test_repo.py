@@ -1,6 +1,6 @@
 import copy
 import datetime
-from page_analyzer.url_services import UrlServices
+from page_analyzer.url_service import UrlService
 import pook
 import pytest
 
@@ -136,13 +136,13 @@ class FakeRepo:
 
 
 @pytest.fixture()
-def functionality():
+def url_service():
     fake_repo = FakeRepo()
-    functionality = UrlServices(fake_repo)
-    return functionality
+    url_service = UrlService(fake_repo)
+    return url_service
 
 
-def test_form_urls_with_last_check(functionality):
+def test_form_urls_with_last_check(url_service):
     correct = [
         {
             'id': 3,
@@ -166,14 +166,14 @@ def test_form_urls_with_last_check(functionality):
             'last_check_status_code': 200,
         },
     ]
-    result = functionality.form_urls_with_last_check()
+    result = url_service.form_urls_with_last_check()
     assert result == correct
 
 
-def test_process_url_in_db(functionality):
-    already_in = functionality.process_url_in_db('https://ru.hexlet.io')
-    new_one = functionality.process_url_in_db('https://ok.ru')
-    incorrect = functionality.process_url_in_db('httpssss://abc@abc.net')
+def test_process_url_in_db(url_service):
+    already_in = url_service.process_url_in_db('https://ru.hexlet.io')
+    new_one = url_service.process_url_in_db('https://ok.ru')
+    incorrect = url_service.process_url_in_db('httpssss://abc@abc.net')
     assert already_in == {
         'status': 'info',
         'message': 'Страница уже существует',
@@ -192,10 +192,10 @@ def test_process_url_in_db(functionality):
 
 
 @pook.on
-def test_make_check(functionality):
+def test_make_check(url_service):
     pook.get('https://ru.hexlet.io', reply=200, response_type='text/html', response_body='<html><head><title>Test title</title><meta name="description" content="Test description for Page Analyzer"></head><body><h1>Test h1</h1></body></html>')  # noqa: E501
     pook.get('http://www.google.com', reply=500, response_type='text/html', response_body='<html><head><title>Test for bad</title></лдодлhead></html>')  # noqa: E501
-    result_good = functionality.make_check(1)
-    result_bad = functionality.make_check(2)
+    result_good = url_service.make_check(1)
+    result_bad = url_service.make_check(2)
     assert result_good == ('Страница успешно проверена', 'success')
     assert result_bad == ('Произошла ошибка при проверке', 'danger')

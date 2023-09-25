@@ -4,6 +4,7 @@ from psycopg2 import pool
 
 
 class DatabaseConnection:
+    GET_BACK_VALUES = ('all', 'one', 'none')
 
     def __init__(self):
         self.minconn = 0
@@ -22,13 +23,20 @@ class DatabaseConnection:
         cursor = self.conn.cursor()
         return cursor
 
-    def execute(self, *query_content, get_back=True):
+    def execute(self, *query_content, get_back='all'):
+        if get_back not in self.GET_BACK_VALUES:
+            raise ValueError('Incorrect value of the \'get_back\' argument')
+        result = None
         self.getconn()
         cursor = self.cursor()
         cursor.execute(*query_content)
-        result = None
-        if get_back:
-            result = cursor.fetchall()
+        match get_back:
+            case 'all':
+                result = cursor.fetchall()
+            case 'one':
+                result = cursor.fetchone()
+        if get_back == 'none':
+            self.conn.commit()
         cursor.close()
         self.putconn()
         return result

@@ -7,6 +7,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/421eb636f069de274c35/test_coverage)](https://codeclimate.com/github/ikhanter/python-project-83/test_coverage)
 
 ## Link: [click](https://page-analyzer-bcx7.onrender.com)
+The web service may be deactivated due to the expiration of the free operating time of the database and the service itself. Please write to me to activate the service and rebuild the database.
 
 # About
 
